@@ -29,11 +29,11 @@ message CreateProductStockRequest {
 }
 
 message GetProductStockRequest {
-    string id = 1;
+    uint32 id = 1;
 }
 
 message DeleteProductStockRequest {
-    string id = 1;
+    uint32 id = 1;
 }
 
 message ListProductStocksResponse {
@@ -45,12 +45,14 @@ message GetProductStockResponse {
 }
 
 message CreateProductStockResponse {
-    string id = 1;
+    uint32 id = 1;
 }
 
 message ProductStock {
-    string id = 1;
+    uint32 id = 1;
     string sku = 2; 
     string brand = 3;
     string model = 4;
+    int32 available_stock = 5;
+    int32 reserved_quantity = 6;
 }

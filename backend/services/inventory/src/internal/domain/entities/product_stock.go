@@ -2,7 +2,7 @@ package entities
 
 import "time"
 
-type ProductID string
+type ProductID uint
 type SKU string
 
 type ProductStock struct {

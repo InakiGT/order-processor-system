@@ -120,7 +120,7 @@ func (x *CreateProductStockRequest) GetAvailableStock() int32 {
 
 type GetProductStockRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -155,16 +155,16 @@ func (*GetProductStockRequest) Descriptor() ([]byte, []int) {
 	return file_product_stock_v1_product_stock_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *GetProductStockRequest) GetId() string {
+func (x *GetProductStockRequest) GetId() uint32 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
 type DeleteProductStockRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -199,11 +199,11 @@ func (*DeleteProductStockRequest) Descriptor() ([]byte, []int) {
 	return file_product_stock_v1_product_stock_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *DeleteProductStockRequest) GetId() string {
+func (x *DeleteProductStockRequest) GetId() uint32 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
 type ListProductStocksResponse struct {
@@ -296,7 +296,7 @@ func (x *GetProductStockResponse) GetProduct() *ProductStock {
 
 type CreateProductStockResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -331,21 +331,23 @@ func (*CreateProductStockResponse) Descriptor() ([]byte, []int) {
 	return file_product_stock_v1_product_stock_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *CreateProductStockResponse) GetId() string {
+func (x *CreateProductStockResponse) GetId() uint32 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
 type ProductStock struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Sku           string                 `protobuf:"bytes,2,opt,name=sku,proto3" json:"sku,omitempty"`
-	Brand         string                 `protobuf:"bytes,3,opt,name=brand,proto3" json:"brand,omitempty"`
-	Model         string                 `protobuf:"bytes,4,opt,name=model,proto3" json:"model,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	Id               uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Sku              string                 `protobuf:"bytes,2,opt,name=sku,proto3" json:"sku,omitempty"`
+	Brand            string                 `protobuf:"bytes,3,opt,name=brand,proto3" json:"brand,omitempty"`
+	Model            string                 `protobuf:"bytes,4,opt,name=model,proto3" json:"model,omitempty"`
+	AvailableStock   int32                  `protobuf:"varint,5,opt,name=available_stock,json=availableStock,proto3" json:"available_stock,omitempty"`
+	ReservedQuantity int32                  `protobuf:"varint,6,opt,name=reserved_quantity,json=reservedQuantity,proto3" json:"reserved_quantity,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *ProductStock) Reset() {
@@ -378,11 +380,11 @@ func (*ProductStock) Descriptor() ([]byte, []int) {
 	return file_product_stock_v1_product_stock_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *ProductStock) GetId() string {
+func (x *ProductStock) GetId() uint32 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
 func (x *ProductStock) GetSku() string {
@@ -406,6 +408,20 @@ func (x *ProductStock) GetModel() string {
 	return ""
 }
 
+func (x *ProductStock) GetAvailableStock() int32 {
+	if x != nil {
+		return x.AvailableStock
+	}
+	return 0
+}
+
+func (x *ProductStock) GetReservedQuantity() int32 {
+	if x != nil {
+		return x.ReservedQuantity
+	}
+	return 0
+}
+
 var File_product_stock_v1_product_stock_proto protoreflect.FileDescriptor
 
 const file_product_stock_v1_product_stock_proto_rawDesc = "" +
@@ -417,20 +433,22 @@ const file_product_stock_v1_product_stock_proto_rawDesc = "" +
 	"\x05model\x18\x02 \x01(\tR\x05model\x12'\n" +
 	"\x0favailable_stock\x18\x03 \x01(\x05R\x0eavailableStock\"(\n" +
 	"\x16GetProductStockRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"+\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\"+\n" +
 	"\x19DeleteProductStockRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"W\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\"W\n" +
 	"\x19ListProductStocksResponse\x12:\n" +
 	"\bproducts\x18\x01 \x03(\v2\x1e.product_stock.v1.ProductStockR\bproducts\"S\n" +
 	"\x17GetProductStockResponse\x128\n" +
 	"\aproduct\x18\x01 \x01(\v2\x1e.product_stock.v1.ProductStockR\aproduct\",\n" +
 	"\x1aCreateProductStockResponse\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"\\\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\"\xb2\x01\n" +
 	"\fProductStock\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x10\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\x12\x10\n" +
 	"\x03sku\x18\x02 \x01(\tR\x03sku\x12\x14\n" +
 	"\x05brand\x18\x03 \x01(\tR\x05brand\x12\x14\n" +
-	"\x05model\x18\x04 \x01(\tR\x05model2\xb7\x03\n" +
+	"\x05model\x18\x04 \x01(\tR\x05model\x12'\n" +
+	"\x0favailable_stock\x18\x05 \x01(\x05R\x0eavailableStock\x12+\n" +
+	"\x11reserved_quantity\x18\x06 \x01(\x05R\x10reservedQuantity2\xb7\x03\n" +
 	"\x13ProductStockService\x12l\n" +
 	"\x11ListProductStocks\x12*.product_stock.v1.ListProductStocksRequest\x1a+.product_stock.v1.ListProductStocksResponse\x12f\n" +
 	"\x0fGetProductStock\x12(.product_stock.v1.GetProductStockRequest\x1a).product_stock.v1.GetProductStockResponse\x12o\n" +
