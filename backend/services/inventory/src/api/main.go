@@ -6,10 +6,15 @@ import (
 
 	"github.com/InakiGT/processor/inventory-service/src/api/grpc/gateways"
 	"github.com/InakiGT/processor/inventory-service/src/internal/infra/persistence/gorm"
+	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
 )
 
 func main() {
+	if err := godotenv.Load(); err != nil {
+		log.Fatalf("Error while trying to load .env")
+	}
+
 	db := gorm.NewDBConnection()
 
 	listener, err := net.Listen("tcp", ":50051")
