@@ -51,7 +51,7 @@ func (r *ProductStockGormRepo) Save(ctx context.Context, productStock *entities.
 		return nil, err
 	}
 
-	return productStock, nil
+	return toProductStockEntity(gormProduct), nil
 }
 
 func (r *ProductStockGormRepo) Update(ctx context.Context, productStock *entities.ProductStock) error {
