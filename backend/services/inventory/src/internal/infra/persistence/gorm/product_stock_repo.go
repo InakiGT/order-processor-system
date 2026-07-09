@@ -2,6 +2,7 @@ package gorm
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/InakiGT/processor/inventory-service/src/internal/domain/entities"
@@ -14,7 +15,7 @@ type ProductStockGormRepo struct {
 
 type ProductStock struct {
 	gorm.Model
-	SKU               entities.SKU
+	SKU               entities.SKU `gorm:"unique;not null"`
 	Brand             string
 	ModelName         string
 	AvailableQuantity int
@@ -47,22 +48,13 @@ func (r *ProductStockGormRepo) FindOneByID(ctx context.Context, id entities.Prod
 
 func (r *ProductStockGormRepo) Save(ctx context.Context, productStock *entities.ProductStock) (*entities.ProductStock, error) {
 	gormProduct := toProductStockModel(productStock)
+	fmt.Println(gormProduct.ID)
+
 	if err := r.db.WithContext(ctx).Save(gormProduct).Error; err != nil {
 		return nil, err
 	}
 
 	return toProductStockEntity(gormProduct), nil
-}
-
-func (r *ProductStockGormRepo) Update(ctx context.Context, productStock *entities.ProductStock) error {
-	var productToUpdate ProductStock
-
-	if err := r.db.WithContext(ctx).Where("id = ?", productStock.ProductID).First(&productToUpdate).Error; err != nil {
-		return err
-	}
-
-	productToUpdate = *toProductStockModel(productStock)
-	return r.db.WithContext(ctx).Save(&productToUpdate).Error
 }
 
 func (r *ProductStockGormRepo) Delete(ctx context.Context, id entities.ProductID) error {

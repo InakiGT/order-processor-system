@@ -17,6 +17,7 @@ func NewGetProductStock(repo repositories.ProductStockRepository) *GetProductSto
 
 func (h *GetProductStockHandler) Handle(ctx context.Context, query GetProductStockQuery) (*entities.ProductStock, error) {
 	product, err := h.repo.FindOneByID(ctx, query.ProductId)
+
 	if err != nil {
 		return nil, err
 	}

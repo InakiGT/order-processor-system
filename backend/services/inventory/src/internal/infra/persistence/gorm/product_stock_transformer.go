@@ -1,6 +1,9 @@
 package gorm
 
-import "github.com/InakiGT/processor/inventory-service/src/internal/domain/entities"
+import (
+	"github.com/InakiGT/processor/inventory-service/src/internal/domain/entities"
+	"gorm.io/gorm"
+)
 
 func toProductStockEntity(model *ProductStock) *entities.ProductStock {
 	return &entities.ProductStock{
@@ -27,10 +30,15 @@ func toProductStockEntities(models []*ProductStock) []*entities.ProductStock {
 
 func toProductStockModel(entity *entities.ProductStock) *ProductStock {
 	return &ProductStock{
+		Model: gorm.Model{
+			ID: uint(entity.ProductID),
+		},
 		SKU:               entity.SKU,
 		ModelName:         entity.Model,
 		Brand:             entity.Brand,
 		ReservedQuantity:  entity.ReservedQuantity,
 		AvailableQuantity: entity.AvailableQuantity,
+		CreatedAt:         entity.CreatedAt,
+		UpdatedAt:         entity.UpdatedAt,
 	}
 }

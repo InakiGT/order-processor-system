@@ -6,6 +6,7 @@ import (
 	productstockpb "github.com/InakiGT/processor/inventory-service/src/api/pb/product_stock/v1"
 	createproductstock "github.com/InakiGT/processor/inventory-service/src/internal/app/commands/create_product_stock"
 	deleteproductstock "github.com/InakiGT/processor/inventory-service/src/internal/app/commands/delete_product_stock"
+	reserveproductstock "github.com/InakiGT/processor/inventory-service/src/internal/app/commands/reserve_product_stock"
 	getproductstock "github.com/InakiGT/processor/inventory-service/src/internal/app/queries/get_product_stock"
 	listproductstock "github.com/InakiGT/processor/inventory-service/src/internal/app/queries/list_product_stock"
 	"github.com/InakiGT/processor/inventory-service/src/internal/domain/entities"
@@ -14,10 +15,11 @@ import (
 
 type ProductStockService struct {
 	productstockpb.UnimplementedProductStockServiceServer
-	createHandler *createproductstock.CreateProductStockHandler
-	deleteHandler *deleteproductstock.DeleteProductStockHandler
-	listHandler   *listproductstock.ListProductStockHandler
-	getHandler    *getproductstock.GetProductStockHandler
+	getHandler     *getproductstock.GetProductStockHandler
+	listHandler    *listproductstock.ListProductStockHandler
+	createHandler  *createproductstock.CreateProductStockHandler
+	deleteHandler  *deleteproductstock.DeleteProductStockHandler
+	reserveHandler *reserveproductstock.ReserveProductStockHandler
 }
 
 func NewProductStockService(
@@ -25,12 +27,14 @@ func NewProductStockService(
 	list *listproductstock.ListProductStockHandler,
 	create *createproductstock.CreateProductStockHandler,
 	delete *deleteproductstock.DeleteProductStockHandler,
+	reserve *reserveproductstock.ReserveProductStockHandler,
 ) *ProductStockService {
 	return &ProductStockService{
-		getHandler:    get,
-		listHandler:   list,
-		createHandler: create,
-		deleteHandler: delete,
+		getHandler:     get,
+		listHandler:    list,
+		createHandler:  create,
+		deleteHandler:  delete,
+		reserveHandler: reserve,
 	}
 }
 
@@ -100,4 +104,17 @@ func (s *ProductStockService) GetProductStock(
 	return &productstockpb.GetProductStockResponse{
 		Product: toProductStock(product),
 	}, nil
+}
+
+func (s *ProductStockService) ReserveStock(ctx context.Context, req *productstockpb.ReserveStockRequest) (*emptypb.Empty, error) {
+	cmd := reserveproductstock.ReserveProductStockCommand{
+		ProductId: entities.ProductID(req.Id),
+		Quantity:  int(req.Quantity),
+	}
+
+	if err := s.reserveHandler.Handle(ctx, cmd); err != nil {
+		return nil, err
+	}
+
+	return nil, nil
 }

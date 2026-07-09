@@ -18,6 +18,9 @@ service ProductStockService {
 
     rpc DeleteProductStock(DeleteProductStockRequest)
         returns (google.protobuf.Empty);
+
+    rpc ReserveStock(ReserveStockRequest)
+        returns (google.protobuf.Empty);
 }
 
 message ListProductStocksRequest {}
@@ -34,6 +37,11 @@ message GetProductStockRequest {
 
 message DeleteProductStockRequest {
     uint32 id = 1;
+}
+
+message ReserveStockRequest {
+    uint32 id = 1;
+    int32 quantity = 2;
 }
 
 message ListProductStocksResponse {

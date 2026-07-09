@@ -7,10 +7,12 @@ import (
 
 func toProductStock(entity *entities.ProductStock) *productstockpb.ProductStock {
 	return &productstockpb.ProductStock{
-		Id:    uint32(entity.ProductID),
-		Sku:   string(entity.SKU),
-		Brand: entity.Brand,
-		Model: entity.Model,
+		Id:               uint32(entity.ProductID),
+		Sku:              string(entity.SKU),
+		Brand:            entity.Brand,
+		Model:            entity.Model,
+		ReservedQuantity: int32(entity.ReservedQuantity),
+		AvailableStock:   int32(entity.AvailableQuantity),
 	}
 }
 

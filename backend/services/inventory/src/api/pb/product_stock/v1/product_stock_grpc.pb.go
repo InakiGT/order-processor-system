@@ -24,6 +24,7 @@ const (
 	ProductStockService_GetProductStock_FullMethodName    = "/product_stock.v1.ProductStockService/GetProductStock"
 	ProductStockService_CreateProductStock_FullMethodName = "/product_stock.v1.ProductStockService/CreateProductStock"
 	ProductStockService_DeleteProductStock_FullMethodName = "/product_stock.v1.ProductStockService/DeleteProductStock"
+	ProductStockService_ReserveStock_FullMethodName       = "/product_stock.v1.ProductStockService/ReserveStock"
 )
 
 // ProductStockServiceClient is the client API for ProductStockService service.
@@ -34,6 +35,7 @@ type ProductStockServiceClient interface {
 	GetProductStock(ctx context.Context, in *GetProductStockRequest, opts ...grpc.CallOption) (*GetProductStockResponse, error)
 	CreateProductStock(ctx context.Context, in *CreateProductStockRequest, opts ...grpc.CallOption) (*CreateProductStockResponse, error)
 	DeleteProductStock(ctx context.Context, in *DeleteProductStockRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ReserveStock(ctx context.Context, in *ReserveStockRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type productStockServiceClient struct {
@@ -84,6 +86,16 @@ func (c *productStockServiceClient) DeleteProductStock(ctx context.Context, in *
 	return out, nil
 }
 
+func (c *productStockServiceClient) ReserveStock(ctx context.Context, in *ReserveStockRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, ProductStockService_ReserveStock_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ProductStockServiceServer is the server API for ProductStockService service.
 // All implementations must embed UnimplementedProductStockServiceServer
 // for forward compatibility.
@@ -92,6 +104,7 @@ type ProductStockServiceServer interface {
 	GetProductStock(context.Context, *GetProductStockRequest) (*GetProductStockResponse, error)
 	CreateProductStock(context.Context, *CreateProductStockRequest) (*CreateProductStockResponse, error)
 	DeleteProductStock(context.Context, *DeleteProductStockRequest) (*emptypb.Empty, error)
+	ReserveStock(context.Context, *ReserveStockRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedProductStockServiceServer()
 }
 
@@ -113,6 +126,9 @@ func (UnimplementedProductStockServiceServer) CreateProductStock(context.Context
 }
 func (UnimplementedProductStockServiceServer) DeleteProductStock(context.Context, *DeleteProductStockRequest) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteProductStock not implemented")
+}
+func (UnimplementedProductStockServiceServer) ReserveStock(context.Context, *ReserveStockRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method ReserveStock not implemented")
 }
 func (UnimplementedProductStockServiceServer) mustEmbedUnimplementedProductStockServiceServer() {}
 func (UnimplementedProductStockServiceServer) testEmbeddedByValue()                             {}
@@ -207,6 +223,24 @@ func _ProductStockService_DeleteProductStock_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProductStockService_ReserveStock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReserveStockRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductStockServiceServer).ReserveStock(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductStockService_ReserveStock_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductStockServiceServer).ReserveStock(ctx, req.(*ReserveStockRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ProductStockService_ServiceDesc is the grpc.ServiceDesc for ProductStockService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -229,6 +263,10 @@ var ProductStockService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteProductStock",
 			Handler:    _ProductStockService_DeleteProductStock_Handler,
+		},
+		{
+			MethodName: "ReserveStock",
+			Handler:    _ProductStockService_ReserveStock_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -1,6 +1,10 @@
 package entities
 
-import "time"
+import (
+	"time"
+
+	"github.com/InakiGT/processor/inventory-service/src/internal/domain/errors"
+)
 
 type ProductID uint
 type SKU string
@@ -26,4 +30,20 @@ func NewProductStock(sku SKU, brand, model string, availableQuantity int) *Produ
 		CreatedAt:         time.Now(),
 		UpdatedAt:         time.Now(),
 	}
+}
+
+func (p *ProductStock) Reserve(quantity int) error {
+	if quantity <= 0 {
+		return errors.ErrInvalidQuantity
+	}
+
+	if quantity > p.AvailableQuantity {
+		return errors.ErrInsufficientStock
+	}
+
+	p.AvailableQuantity -= quantity
+	p.ReservedQuantity += quantity
+	p.UpdatedAt = time.Now()
+
+	return nil
 }
