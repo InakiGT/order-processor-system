@@ -3,6 +3,7 @@ package reserveproductstock
 import (
 	"context"
 
+	"github.com/InakiGT/processor/inventory-service/src/internal/domain/entities"
 	"github.com/InakiGT/processor/inventory-service/src/internal/domain/repositories"
 )
 
@@ -14,19 +15,22 @@ func NewReserveProductStock(repo repositories.ProductStockRepository) *ReservePr
 	return &ReserveProductStockHandler{repo}
 }
 
-func (h *ReserveProductStockHandler) Handle(ctx context.Context, command ReserveProductStockCommand) error {
-	product, err := h.repo.FindOneByID(ctx, command.ProductId)
-	if err != nil {
-		return err
+func (h *ReserveProductStockHandler) Handle(ctx context.Context, cmd ReserveProductStockCommand) error {
+	productsToReserve := make([]*entities.ProductStock, 0, len(cmd.Products))
+
+	for _, item := range cmd.Products {
+		product, err := h.repo.FindOneByID(ctx, item.ProductId)
+
+		if err != nil {
+			return err
+		}
+
+		if err = product.Reserve(item.Quantity); err != nil {
+			return err
+		}
+
+		productsToReserve = append(productsToReserve, product)
 	}
 
-	if err := product.Reserve(command.Quantity); err != nil {
-		return err
-	}
-
-	if _, err := h.repo.Save(ctx, product); err != nil {
-		return err
-	}
-
-	return nil
+	return h.repo.SaveMany(ctx, productsToReserve)
 }

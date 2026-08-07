@@ -19,7 +19,7 @@ func toProductStockEntity(model *ProductStock) *entities.ProductStock {
 }
 
 func toProductStockEntities(models []*ProductStock) []*entities.ProductStock {
-	entities := make([]*entities.ProductStock, 0)
+	entities := make([]*entities.ProductStock, 0, len(models))
 
 	for _, model := range models {
 		entities = append(entities, toProductStockEntity(model))
@@ -41,4 +41,14 @@ func toProductStockModel(entity *entities.ProductStock) *ProductStock {
 		CreatedAt:         entity.CreatedAt,
 		UpdatedAt:         entity.UpdatedAt,
 	}
+}
+
+func toProductsStocksModels(entities []*entities.ProductStock) []*ProductStock {
+	products := make([]*ProductStock, 0, len(entities))
+
+	for _, entity := range entities {
+		products = append(products, toProductStockModel(entity))
+	}
+
+	return products
 }

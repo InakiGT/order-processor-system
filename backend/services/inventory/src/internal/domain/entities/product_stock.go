@@ -47,3 +47,14 @@ func (p *ProductStock) Reserve(quantity int) error {
 
 	return nil
 }
+
+func (p *ProductStock) Restock(quantity int) error {
+	if quantity <= 0 {
+		return errors.ErrInvalidQuantity
+	}
+
+	p.AvailableQuantity += quantity
+	p.UpdatedAt = time.Now()
+
+	return nil
+}

@@ -2,6 +2,7 @@ package grpc
 
 import (
 	productstockpb "github.com/InakiGT/processor/inventory-service/src/api/pb/product_stock/v1"
+	reserveproductstock "github.com/InakiGT/processor/inventory-service/src/internal/app/commands/reserve_product_stock"
 	"github.com/InakiGT/processor/inventory-service/src/internal/domain/entities"
 )
 
@@ -24,4 +25,17 @@ func toProductStocks(entites []*entities.ProductStock) []*productstockpb.Product
 	}
 
 	return products
+}
+
+func toProductReserveStockCmd(products []*productstockpb.ReserveStockProduct) []reserveproductstock.ProductStockCommand {
+	newProducts := make([]reserveproductstock.ProductStockCommand, 0)
+
+	for _, product := range products {
+		newProducts = append(newProducts, reserveproductstock.ProductStockCommand{
+			ProductId: entities.ProductID(product.Id),
+			Quantity:  int(product.Quantity),
+		})
+	}
+
+	return newProducts
 }

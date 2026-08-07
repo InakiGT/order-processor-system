@@ -2,7 +2,6 @@ package gorm
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/InakiGT/processor/inventory-service/src/internal/domain/entities"
@@ -48,7 +47,6 @@ func (r *ProductStockGormRepo) FindOneByID(ctx context.Context, id entities.Prod
 
 func (r *ProductStockGormRepo) Save(ctx context.Context, productStock *entities.ProductStock) (*entities.ProductStock, error) {
 	gormProduct := toProductStockModel(productStock)
-	fmt.Println(gormProduct.ID)
 
 	if err := r.db.WithContext(ctx).Save(gormProduct).Error; err != nil {
 		return nil, err
@@ -59,4 +57,18 @@ func (r *ProductStockGormRepo) Save(ctx context.Context, productStock *entities.
 
 func (r *ProductStockGormRepo) Delete(ctx context.Context, id entities.ProductID) error {
 	return r.db.WithContext(ctx).Where("id = ?", id).Delete(&ProductStock{}).Error
+}
+
+func (r *ProductStockGormRepo) SaveMany(ctx context.Context, products []*entities.ProductStock) error {
+	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		gormProducts := toProductsStocksModels(products)
+
+		for _, product := range gormProducts {
+			if err := tx.Save(product).Error; err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
 }

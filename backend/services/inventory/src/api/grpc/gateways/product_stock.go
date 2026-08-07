@@ -5,6 +5,7 @@ import (
 	create "github.com/InakiGT/processor/inventory-service/src/internal/app/commands/create_product_stock"
 	delete "github.com/InakiGT/processor/inventory-service/src/internal/app/commands/delete_product_stock"
 	reserve "github.com/InakiGT/processor/inventory-service/src/internal/app/commands/reserve_product_stock"
+	restock "github.com/InakiGT/processor/inventory-service/src/internal/app/commands/restock_product_stock"
 	get "github.com/InakiGT/processor/inventory-service/src/internal/app/queries/get_product_stock"
 	list "github.com/InakiGT/processor/inventory-service/src/internal/app/queries/list_product_stock"
 	infra "github.com/InakiGT/processor/inventory-service/src/internal/infra/grpc"
@@ -21,6 +22,7 @@ func RegisterProductStockService(grpcServer *grpc.Server, db *gorm.DB) {
 	create := create.NewCreateProductStock(repo)
 	delete := delete.NewDeleteProductStock(repo)
 	reserve := reserve.NewReserveProductStock(repo)
+	restock := restock.NewRestockProductStock(repo)
 
 	handler := infra.NewProductStockService(
 		get,
@@ -28,6 +30,7 @@ func RegisterProductStockService(grpcServer *grpc.Server, db *gorm.DB) {
 		create,
 		delete,
 		reserve,
+		restock,
 	)
 
 	productstockpb.RegisterProductStockServiceServer(grpcServer, handler)

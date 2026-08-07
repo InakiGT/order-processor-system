@@ -12,7 +12,7 @@ import (
 
 func main() {
 	if err := godotenv.Load(); err != nil {
-		log.Fatalf("Error while trying to load .env")
+		log.Println("File .env not found. Using env variables instead.")
 	}
 
 	db := gorm.NewDBConnection()

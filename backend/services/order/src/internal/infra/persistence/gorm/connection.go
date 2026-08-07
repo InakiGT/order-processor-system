@@ -1,4 +1,4 @@
-package gorm
+package persistence
 
 import (
 	"fmt"
@@ -20,11 +20,15 @@ func NewDBConnection() *gorm.DB {
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatal("Error while trying to connect to DB", err)
+		log.Fatal("Error while trying to connect to DB: ", err.Error())
 	}
 
-	if err = db.AutoMigrate(&ProductStock{}); err != nil {
-		log.Fatal("Error while trying to auto migrate ProductStock")
+	if err := db.AutoMigrate(&Order{}); err != nil {
+		log.Fatal("Error while trying to migrate Order: ", err.Error())
+	}
+
+	if err := db.AutoMigrate(&OrderItem{}); err != nil {
+		log.Fatal("Error while trying to migrate Order Item: ", err.Error())
 	}
 
 	return db
