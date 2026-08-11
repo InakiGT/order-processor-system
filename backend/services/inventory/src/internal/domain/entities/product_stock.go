@@ -48,6 +48,18 @@ func (p *ProductStock) Reserve(quantity int) error {
 	return nil
 }
 
+func (p *ProductStock) Release(quantity int) error {
+	if quantity > p.ReservedQuantity {
+		return errors.ErrInsufficientStockToRelease
+	}
+
+	p.ReservedQuantity -= quantity
+	p.AvailableQuantity += quantity
+	p.UpdatedAt = time.Now()
+
+	return nil
+}
+
 func (p *ProductStock) Restock(quantity int) error {
 	if quantity <= 0 {
 		return errors.ErrInvalidQuantity

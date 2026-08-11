@@ -60,7 +60,7 @@ func toCmdOrderItems(items []*orderpb.OrderItem) []*createorder.CreateOrderItemC
 }
 
 func toReserveStocks(items []*entities.OrderItem) *productstockpb.ReserveStockRequest {
-	products := make([]*productstockpb.ReserveStockProduct, 0)
+	products := make([]*productstockpb.StockProduct, 0)
 
 	for _, item := range items {
 		products = append(products, toReserveStock(item))
@@ -71,8 +71,8 @@ func toReserveStocks(items []*entities.OrderItem) *productstockpb.ReserveStockRe
 	}
 }
 
-func toReserveStock(item *entities.OrderItem) *productstockpb.ReserveStockProduct {
-	return &productstockpb.ReserveStockProduct{
+func toReserveStock(item *entities.OrderItem) *productstockpb.StockProduct {
+	return &productstockpb.StockProduct{
 		Id:       uint32(item.ProductID),
 		Quantity: int32(item.Quantity),
 	}

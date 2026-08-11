@@ -24,6 +24,9 @@ service ProductStockService {
 
     rpc Restock(RestockRequest)
         returns (RestockResponse);
+
+    rpc ReleaseStock(ReleaseStockRequest)
+        returns (google.protobuf.Empty);
 }
 
 message ListProductStocksRequest {}
@@ -43,7 +46,11 @@ message DeleteProductStockRequest {
 }
 
 message ReserveStockRequest {
-    repeated ReserveStockProduct products = 1;
+    repeated StockProduct products = 1;
+}
+
+message ReleaseStockRequest {
+    repeated StockProduct products = 1;
 }
 
 message RestockRequest {
@@ -80,7 +87,7 @@ message ProductStock {
     int32 reserved_quantity = 6;
 }
 
-message ReserveStockProduct {
+message StockProduct {
     uint32 id = 1;
     int32 quantity = 2;
 }

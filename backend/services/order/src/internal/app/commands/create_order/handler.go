@@ -2,6 +2,7 @@ package createorder
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/InakiGT/processor/order-service/src/internal/domain/entities"
 	"github.com/InakiGT/processor/order-service/src/internal/domain/repositories"
@@ -41,7 +42,10 @@ func (h *CreateOrderHandler) Handle(ctx context.Context, cmd CreateOrderCommand)
 
 	savedOrder, err := h.repo.Save(ctx, order)
 	if err != nil {
-		return nil, err
+
+		if relErr := h.inventoryService.ReleaseStock(ctx, items); relErr != nil {
+			return nil, fmt.Errorf("Save failed: %v AND compensation failed: %v. Human intervention needed.", err, relErr)
+		}
 	}
 
 	return savedOrder, nil

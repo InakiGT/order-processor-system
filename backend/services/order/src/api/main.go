@@ -23,7 +23,7 @@ func main() {
 
 	listener, err := net.Listen("tcp", port)
 	if err != nil {
-		log.Fatal("Error while trying to start the server: ", err.Error())
+		log.Fatal("Error while trying to start the server: ", err)
 	}
 
 	grpcServer := grpc.NewServer()
@@ -32,7 +32,7 @@ func main() {
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {
-		log.Fatal("Error while trying to create a new client: ", err.Error())
+		log.Fatal("Error while trying to create a new client: ", err)
 	}
 
 	gateways.RegisterOrderService(grpcServer, db, grpcClient)
@@ -40,6 +40,6 @@ func main() {
 	log.Println("Server running on port ", port)
 
 	if err := grpcServer.Serve(listener); err != nil {
-		log.Fatal("Error while trying to attach gRPC service: ", err.Error())
+		log.Fatal("Error while trying to attach gRPC service: ", err)
 	}
 }

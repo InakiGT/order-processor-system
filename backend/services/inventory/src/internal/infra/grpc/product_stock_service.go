@@ -6,6 +6,7 @@ import (
 	productstockpb "github.com/InakiGT/processor/inventory-service/src/api/pb/product_stock/v1"
 	createproductstock "github.com/InakiGT/processor/inventory-service/src/internal/app/commands/create_product_stock"
 	deleteproductstock "github.com/InakiGT/processor/inventory-service/src/internal/app/commands/delete_product_stock"
+	releaseproductstock "github.com/InakiGT/processor/inventory-service/src/internal/app/commands/release_product_stock"
 	reserveproductstock "github.com/InakiGT/processor/inventory-service/src/internal/app/commands/reserve_product_stock"
 	restockproductstock "github.com/InakiGT/processor/inventory-service/src/internal/app/commands/restock_product_stock"
 	getproductstock "github.com/InakiGT/processor/inventory-service/src/internal/app/queries/get_product_stock"
@@ -23,6 +24,7 @@ type ProductStockService struct {
 	deleteHandler  *deleteproductstock.DeleteProductStockHandler
 	reserveHandler *reserveproductstock.ReserveProductStockHandler
 	restockHandler *restockproductstock.RestockProductStockHandler
+	releaseHandler *releaseproductstock.ReleaseProductStockHandler
 }
 
 func NewProductStockService(
@@ -32,6 +34,7 @@ func NewProductStockService(
 	delete *deleteproductstock.DeleteProductStockHandler,
 	reserve *reserveproductstock.ReserveProductStockHandler,
 	restock *restockproductstock.RestockProductStockHandler,
+	release *releaseproductstock.ReleaseProductStockHandler,
 ) *ProductStockService {
 	return &ProductStockService{
 		getHandler:     get,
@@ -40,6 +43,7 @@ func NewProductStockService(
 		deleteHandler:  delete,
 		reserveHandler: reserve,
 		restockHandler: restock,
+		releaseHandler: release,
 	}
 }
 
@@ -146,4 +150,19 @@ func (s *ProductStockService) Restock(
 	return &productstockpb.RestockResponse{
 		Status: true,
 	}, nil
+}
+
+func (s *ProductStockService) ReleaseStock(
+	ctx context.Context,
+	req *productstockpb.ReleaseStockRequest,
+) (*emptypb.Empty, error) {
+	cmd := releaseproductstock.ReleaseProductStockCommand{
+		Products: toProductReleaseStockCmd(req.Products),
+	}
+
+	if err := s.releaseHandler.Handle(ctx, cmd); err != nil {
+		return &emptypb.Empty{}, err
+	}
+
+	return &emptypb.Empty{}, nil
 }

@@ -17,16 +17,24 @@ func NewInventoryService(client pb.ProductStockServiceClient) *InventoryServiceG
 }
 
 func (s *InventoryServiceGRPC) ReserveStock(ctx context.Context, productsIds []*entities.OrderItem) error {
-
 	res, err := s.client.ReserveStock(ctx, toReserveStocks(productsIds))
-
-	if res.Status == false {
-		return errors.ErrInsuficientStock
-	}
 
 	if err != nil {
 		return err
 	}
 
+	if res.Status == false {
+		return errors.ErrInsuficientStock
+	}
+
 	return nil
+}
+
+func (s *InventoryServiceGRPC) ReleaseStock(ctx context.Context, products []*entities.OrderItem) error {
+	_, err := s.client.ReleaseStock(
+		ctx,
+		(*pb.ReleaseStockRequest)(toReserveStocks(products)),
+	)
+
+	return err
 }

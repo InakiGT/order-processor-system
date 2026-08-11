@@ -8,4 +8,5 @@ import (
 
 type InventoryService interface {
 	ReserveStock(ctx context.Context, productIds []*entities.OrderItem) error
+	ReleaseStock(ctx context.Context, products []*entities.OrderItem) error
 }

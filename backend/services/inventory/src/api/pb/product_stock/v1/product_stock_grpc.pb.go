@@ -26,6 +26,7 @@ const (
 	ProductStockService_DeleteProductStock_FullMethodName = "/product_stock.v1.ProductStockService/DeleteProductStock"
 	ProductStockService_ReserveStock_FullMethodName       = "/product_stock.v1.ProductStockService/ReserveStock"
 	ProductStockService_Restock_FullMethodName            = "/product_stock.v1.ProductStockService/Restock"
+	ProductStockService_ReleaseStock_FullMethodName       = "/product_stock.v1.ProductStockService/ReleaseStock"
 )
 
 // ProductStockServiceClient is the client API for ProductStockService service.
@@ -38,6 +39,7 @@ type ProductStockServiceClient interface {
 	DeleteProductStock(ctx context.Context, in *DeleteProductStockRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ReserveStock(ctx context.Context, in *ReserveStockRequest, opts ...grpc.CallOption) (*ReserveStockResponse, error)
 	Restock(ctx context.Context, in *RestockRequest, opts ...grpc.CallOption) (*RestockResponse, error)
+	ReleaseStock(ctx context.Context, in *ReleaseStockRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type productStockServiceClient struct {
@@ -108,6 +110,16 @@ func (c *productStockServiceClient) Restock(ctx context.Context, in *RestockRequ
 	return out, nil
 }
 
+func (c *productStockServiceClient) ReleaseStock(ctx context.Context, in *ReleaseStockRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, ProductStockService_ReleaseStock_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ProductStockServiceServer is the server API for ProductStockService service.
 // All implementations must embed UnimplementedProductStockServiceServer
 // for forward compatibility.
@@ -118,6 +130,7 @@ type ProductStockServiceServer interface {
 	DeleteProductStock(context.Context, *DeleteProductStockRequest) (*emptypb.Empty, error)
 	ReserveStock(context.Context, *ReserveStockRequest) (*ReserveStockResponse, error)
 	Restock(context.Context, *RestockRequest) (*RestockResponse, error)
+	ReleaseStock(context.Context, *ReleaseStockRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedProductStockServiceServer()
 }
 
@@ -145,6 +158,9 @@ func (UnimplementedProductStockServiceServer) ReserveStock(context.Context, *Res
 }
 func (UnimplementedProductStockServiceServer) Restock(context.Context, *RestockRequest) (*RestockResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Restock not implemented")
+}
+func (UnimplementedProductStockServiceServer) ReleaseStock(context.Context, *ReleaseStockRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method ReleaseStock not implemented")
 }
 func (UnimplementedProductStockServiceServer) mustEmbedUnimplementedProductStockServiceServer() {}
 func (UnimplementedProductStockServiceServer) testEmbeddedByValue()                             {}
@@ -275,6 +291,24 @@ func _ProductStockService_Restock_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProductStockService_ReleaseStock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReleaseStockRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductStockServiceServer).ReleaseStock(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductStockService_ReleaseStock_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductStockServiceServer).ReleaseStock(ctx, req.(*ReleaseStockRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ProductStockService_ServiceDesc is the grpc.ServiceDesc for ProductStockService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -305,6 +339,10 @@ var ProductStockService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Restock",
 			Handler:    _ProductStockService_Restock_Handler,
+		},
+		{
+			MethodName: "ReleaseStock",
+			Handler:    _ProductStockService_ReleaseStock_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
