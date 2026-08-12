@@ -105,7 +105,7 @@ func (x *GetOrderRequest) GetId() int32 {
 
 type CreateOrderRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Items         []*CreateOrderItem     `protobuf:"bytes,1,rep,name=Items,proto3" json:"Items,omitempty"`
+	Items         []*CreateOrderItem     `protobuf:"bytes,2,rep,name=Items,proto3" json:"Items,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -379,10 +379,10 @@ func (x *CreateOrderResponse) GetOrder() *Order {
 // Entities
 type OrderItem struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	OrderId         int32                  `protobuf:"varint,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
-	ProductId       int32                  `protobuf:"varint,2,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`
-	Quantity        int32                  `protobuf:"varint,3,opt,name=quantity,proto3" json:"quantity,omitempty"`
-	PriceAtPurchase int32                  `protobuf:"varint,4,opt,name=price_at_purchase,json=priceAtPurchase,proto3" json:"price_at_purchase,omitempty"`
+	OrderId         int32                  `protobuf:"varint,2,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
+	ProductId       int32                  `protobuf:"varint,3,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`
+	Quantity        int32                  `protobuf:"varint,4,opt,name=quantity,proto3" json:"quantity,omitempty"`
+	PriceAtPurchase int32                  `protobuf:"varint,5,opt,name=price_at_purchase,json=priceAtPurchase,proto3" json:"price_at_purchase,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -447,9 +447,9 @@ func (x *OrderItem) GetPriceAtPurchase() int32 {
 
 type CreateOrderItem struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	ProductId       int32                  `protobuf:"varint,1,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`
-	Quantity        int32                  `protobuf:"varint,2,opt,name=quantity,proto3" json:"quantity,omitempty"`
-	PriceAtPurchase int32                  `protobuf:"varint,3,opt,name=price_at_purchase,json=priceAtPurchase,proto3" json:"price_at_purchase,omitempty"`
+	ProductId       int32                  `protobuf:"varint,3,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`
+	Quantity        int32                  `protobuf:"varint,4,opt,name=quantity,proto3" json:"quantity,omitempty"`
+	PriceAtPurchase int32                  `protobuf:"varint,5,opt,name=price_at_purchase,json=priceAtPurchase,proto3" json:"price_at_purchase,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -582,7 +582,7 @@ const file_order_v1_oreder_proto_rawDesc = "" +
 	"\x0fGetOrderRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\"E\n" +
 	"\x12CreateOrderRequest\x12/\n" +
-	"\x05Items\x18\x01 \x03(\v2\x19.order.v1.CreateOrderItemR\x05Items\"$\n" +
+	"\x05Items\x18\x02 \x03(\v2\x19.order.v1.CreateOrderItemR\x05Items\"$\n" +
 	"\x12DeleteOrderRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\"B\n" +
 	"\x18ChangeOrderStatusRequest\x12\x0e\n" +
@@ -595,16 +595,16 @@ const file_order_v1_oreder_proto_rawDesc = "" +
 	"\x13CreateOrderResponse\x12%\n" +
 	"\x05order\x18\x01 \x01(\v2\x0f.order.v1.OrderR\x05order\"\x8d\x01\n" +
 	"\tOrderItem\x12\x19\n" +
-	"\border_id\x18\x01 \x01(\x05R\aorderId\x12\x1d\n" +
+	"\border_id\x18\x02 \x01(\x05R\aorderId\x12\x1d\n" +
 	"\n" +
-	"product_id\x18\x02 \x01(\x05R\tproductId\x12\x1a\n" +
-	"\bquantity\x18\x03 \x01(\x05R\bquantity\x12*\n" +
-	"\x11price_at_purchase\x18\x04 \x01(\x05R\x0fpriceAtPurchase\"x\n" +
+	"product_id\x18\x03 \x01(\x05R\tproductId\x12\x1a\n" +
+	"\bquantity\x18\x04 \x01(\x05R\bquantity\x12*\n" +
+	"\x11price_at_purchase\x18\x05 \x01(\x05R\x0fpriceAtPurchase\"x\n" +
 	"\x0fCreateOrderItem\x12\x1d\n" +
 	"\n" +
-	"product_id\x18\x01 \x01(\x05R\tproductId\x12\x1a\n" +
-	"\bquantity\x18\x02 \x01(\x05R\bquantity\x12*\n" +
-	"\x11price_at_purchase\x18\x03 \x01(\x05R\x0fpriceAtPurchase\"}\n" +
+	"product_id\x18\x03 \x01(\x05R\tproductId\x12\x1a\n" +
+	"\bquantity\x18\x04 \x01(\x05R\bquantity\x12*\n" +
+	"\x11price_at_purchase\x18\x05 \x01(\x05R\x0fpriceAtPurchase\"}\n" +
 	"\x05Order\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x16\n" +
 	"\x06status\x18\x02 \x01(\tR\x06status\x12!\n" +

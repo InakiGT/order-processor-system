@@ -45,7 +45,7 @@ func toOrders(orders []*entities.Order) []*orderpb.Order {
 	return newOrders
 }
 
-func toCmdOrderItems(items []*orderpb.OrderItem) []*createorder.CreateOrderItemCommand {
+func toCmdOrderItems(items []*orderpb.CreateOrderItem) []*createorder.CreateOrderItemCommand {
 	orderItems := make([]*createorder.CreateOrderItemCommand, 0)
 
 	for _, item := range items {
