@@ -27,6 +27,7 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer()
+
 	grpcClient, err := grpc.NewClient(
 		os.Getenv("ORDER_SERVICE"),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
