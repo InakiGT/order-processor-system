@@ -23,8 +23,11 @@ func NewRouter(
 
 	inventory := router.Group("/inventory")
 	{
+		inventory.PATCH("/restock", inventoryHandler.Restock)
 		inventory.GET("", inventoryHandler.ListProductsStocks)
 		inventory.GET("/:id", inventoryHandler.GetProductStock)
+		inventory.POST("", inventoryHandler.CreateProductStock)
+		inventory.DELETE("", inventoryHandler.DeleteProductStock)
 	}
 
 	return router

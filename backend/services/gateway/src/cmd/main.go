@@ -32,6 +32,9 @@ func main() {
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 
+	defer orderConn.Close()
+	defer inventoryConn.Close()
+
 	orderHandler := order.NewOrderHandler(
 		orderpb.NewOrderServiceClient(orderConn),
 	)
@@ -45,5 +48,7 @@ func main() {
 		inventoryHandler,
 	)
 
-	router.Run()
+	if err := router.Run(); err != nil {
+		log.Fatal("Failed to start HTTP server: ", err)
+	}
 }
