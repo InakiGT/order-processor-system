@@ -78,6 +78,10 @@ func (h *InventoryHandler) GetProductStock(ctx *gin.Context) {
 			ctx.JSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
 			})
+		case codes.NotFound:
+			ctx.JSON(http.StatusNotFound, gin.H{
+				"error": err.Error(),
+			})
 		case codes.DeadlineExceeded:
 			ctx.JSON(http.StatusGatewayTimeout, gin.H{
 				"error": "product stock service timed out",
@@ -188,6 +192,17 @@ func (h *InventoryHandler) DeleteProductStock(ctx *gin.Context) {
 }
 
 func (h *InventoryHandler) Restock(ctx *gin.Context) {
+	reqId := ctx.Param("id")
+
+	id, err := strconv.Atoi(reqId)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+
+		return
+	}
+
 	var req RestockRequest
 
 	if err := ctx.ShouldBindBodyWithJSON(&req); err != nil {
@@ -199,7 +214,7 @@ func (h *InventoryHandler) Restock(ctx *gin.Context) {
 	}
 
 	grpcReq := &productstockpb.RestockRequest{
-		Id:       req.Id,
+		Id:       uint32(id),
 		Quantity: req.Quantity,
 	}
 

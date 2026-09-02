@@ -9,6 +9,7 @@ import (
 	"github.com/InakiGT/processor/api-gateway/src/api/http/order"
 	orderpb "github.com/InakiGT/processor/api-gateway/src/api/pb/order/v1"
 	productstockpb "github.com/InakiGT/processor/api-gateway/src/api/pb/product_stock/v1"
+	"github.com/InakiGT/processor/api-gateway/src/internal/auth"
 	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -17,6 +18,14 @@ import (
 func main() {
 	if err := godotenv.Load(); err != nil {
 		log.Println("Error while trying to load .env file. Using env variables instead")
+	}
+
+	jwtValidator, err := auth.NewValidator(
+		os.Getenv("AUTH0_DOMAIN"),
+		os.Getenv("AUTH0_AUDIENCE"),
+	)
+	if err != nil {
+		log.Fatal("An error ocurred while trying to create the auth validator: ", err)
 	}
 
 	orderConn, err := grpc.NewClient(
@@ -46,6 +55,7 @@ func main() {
 	router := api.NewRouter(
 		orderHandler,
 		inventoryHandler,
+		auth.AuthMiddleware(jwtValidator),
 	)
 
 	if err := router.Run(); err != nil {

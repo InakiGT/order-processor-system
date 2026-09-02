@@ -3,16 +3,21 @@ package api
 import (
 	"github.com/InakiGT/processor/api-gateway/src/api/http/inventory"
 	"github.com/InakiGT/processor/api-gateway/src/api/http/order"
+	"github.com/InakiGT/processor/api-gateway/src/internal/auth"
 	"github.com/gin-gonic/gin"
 )
 
 func NewRouter(
 	orderHandler *order.OrderHandler,
 	inventoryHandler *inventory.InventoryHandler,
+	authMiddleware gin.HandlerFunc,
 ) *gin.Engine {
 	router := gin.Default()
 
-	orders := router.Group("/orders")
+	protected := router.Group("/")
+	protected.Use(authMiddleware)
+
+	orders := protected.Group("/orders")
 	{
 		orders.GET("", orderHandler.ListOrders)
 		orders.GET("/:id", orderHandler.GetOrder)
@@ -21,13 +26,33 @@ func NewRouter(
 		orders.PATCH("/", orderHandler.ChangeOrderStatus)
 	}
 
-	inventory := router.Group("/inventory/items")
+	inventory := protected.Group("/inventory/items")
 	{
-		inventory.PATCH("/:id", inventoryHandler.Restock)
-		inventory.GET("", inventoryHandler.ListProductsStocks)
-		inventory.GET("/:id", inventoryHandler.GetProductStock)
-		inventory.POST("", inventoryHandler.CreateProductStock)
-		inventory.DELETE("", inventoryHandler.DeleteProductStock)
+		inventory.PATCH(
+			"/:id",
+			auth.RequireScope("write:inventory"),
+			inventoryHandler.Restock,
+		)
+		inventory.GET(
+			"",
+			auth.RequireScope("read:inventory"),
+			inventoryHandler.ListProductsStocks,
+		)
+		inventory.GET(
+			"/:id",
+			auth.RequireScope("read:inventory"),
+			inventoryHandler.GetProductStock,
+		)
+		inventory.POST(
+			"",
+			auth.RequireScope("write:inventory"),
+			inventoryHandler.CreateProductStock,
+		)
+		inventory.DELETE(
+			"",
+			auth.RequireScope("write:inventory"),
+			inventoryHandler.DeleteProductStock,
+		)
 	}
 
 	return router

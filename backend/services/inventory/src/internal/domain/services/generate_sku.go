@@ -8,8 +8,8 @@ import (
 )
 
 func GenerateSKU(brand, model string) entities.SKU {
-	b := strings.ToUpper(brand[:3])
-	m := strings.ToUpper(brand[:3])
+	b := strings.Trim(strings.ToUpper(brand[:3]), " ")
+	m := strings.Trim(strings.ToUpper(model[:3]), " ")
 
 	sku := fmt.Sprintf("%s-%s", b, m)
 

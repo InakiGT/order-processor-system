@@ -2,9 +2,11 @@ package gorm
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/InakiGT/processor/inventory-service/src/internal/domain/entities"
+	domainerrors "github.com/InakiGT/processor/inventory-service/src/internal/domain/errors"
 	"gorm.io/gorm"
 )
 
@@ -39,6 +41,10 @@ func (r *ProductStockGormRepo) FindAll(ctx context.Context) ([]*entities.Product
 func (r *ProductStockGormRepo) FindOneByID(ctx context.Context, id entities.ProductID) (*entities.ProductStock, error) {
 	var productStock *ProductStock
 	if err := r.db.WithContext(ctx).Where("id = ?", id).First(&productStock).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, domainerrors.ErrProductStockNotFound
+		}
+
 		return nil, err
 	}
 

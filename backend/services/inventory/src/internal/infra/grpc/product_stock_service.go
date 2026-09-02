@@ -2,6 +2,7 @@ package grpc
 
 import (
 	"context"
+	"errors"
 
 	productstockpb "github.com/InakiGT/processor/inventory-service/src/api/pb/product_stock/v1"
 	createproductstock "github.com/InakiGT/processor/inventory-service/src/internal/app/commands/create_product_stock"
@@ -12,6 +13,9 @@ import (
 	getproductstock "github.com/InakiGT/processor/inventory-service/src/internal/app/queries/get_product_stock"
 	listproductstock "github.com/InakiGT/processor/inventory-service/src/internal/app/queries/list_product_stock"
 	"github.com/InakiGT/processor/inventory-service/src/internal/domain/entities"
+	domainerrors "github.com/InakiGT/processor/inventory-service/src/internal/domain/errors"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -107,6 +111,10 @@ func (s *ProductStockService) GetProductStock(
 
 	product, err := s.getHandler.Handle(ctx, query)
 	if err != nil {
+		if errors.Is(err, domainerrors.ErrProductStockNotFound) {
+			return nil, status.Error(codes.NotFound, err.Error())
+		}
+
 		return nil, err
 	}
 
@@ -124,6 +132,10 @@ func (s *ProductStockService) ReserveStock(
 	}
 
 	if err := s.reserveHandler.Handle(ctx, cmd); err != nil {
+		if errors.Is(err, domainerrors.ErrProductStockNotFound) {
+			return nil, status.Error(codes.NotFound, err.Error())
+		}
+
 		return nil, err
 	}
 
@@ -142,9 +154,11 @@ func (s *ProductStockService) Restock(
 	}
 
 	if err := s.restockHandler.Handle(ctx, cmd); err != nil {
-		return &productstockpb.RestockResponse{
-			Status: false,
-		}, err
+		if errors.Is(err, domainerrors.ErrProductStockNotFound) {
+			return nil, status.Error(codes.NotFound, err.Error())
+		}
+
+		return nil, err
 	}
 
 	return &productstockpb.RestockResponse{

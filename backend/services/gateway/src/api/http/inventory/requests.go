@@ -7,6 +7,5 @@ type CreateProductStockRequest struct {
 }
 
 type RestockRequest struct {
-	Id       uint32 `json:"product_stock_id" binding:"required"`
 	Quantity uint32 `json:"increase" binding:"required"`
 }
